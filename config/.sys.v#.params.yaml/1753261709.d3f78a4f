@@ -1,0 +1,44 @@
+
+### 4. `config/params.yaml`
+
+A centralized place for all hyperparameters, making experiments easy to configure and reproduce.
+
+```yaml
+# Configuration for the RLAD Anomaly Detection Project
+
+# --- Data and Preprocessing ---
+data:
+  path: "/eos/home-i01/a/alpapana/SWAN_projects/Bancari/Data/bonifico/" # UPDATE THIS PATH
+  results_log_file: "results_log.csv"
+
+preprocessing:
+  window_size: 18
+  top_n_categorical: 10 # Number of categorical features to keep based on mutual information
+  top_m_values: 10      # Number of frequent values to keep per categorical feature
+  test_split_size: 0.2
+  validation_split_size: 0.2 # Proportion of the remaining data for validation
+
+# --- Model Architecture ---
+model:
+  type: "lstm" # or "transformer"
+  hidden_size: 64
+  # Transformer-specific params (if model.type is "transformer")
+  n_heads: 4
+  num_layers: 1
+  dropout: 0.1
+
+# --- Training Parameters ---
+training:
+  seed: 42 # Set to null for a random seed in each run
+  num_episodes: 800
+  inner_epochs: 200
+  batch_size: 8
+  learning_rate: 0.001
+  gamma: 0.95 # Discount factor for future rewards
+  epsilon_min: 0.22 # Minimum exploration rate
+  target_update_freq: 40
+  replay_buffer_size: 80
+  # Rewards
+  r1_positive_fraud: 4.0   # Reward for correctly identifying fraud
+  r2_positive_normal: 1.0  # Reward for correctly identifying normal
+  validation_freq: 10      # Run validation every N episodes
