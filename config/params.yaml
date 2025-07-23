@@ -37,3 +37,11 @@ training:
   r1_positive_fraud: 4.0   # Reward for correctly identifying fraud
   r2_positive_normal: 1.0  # Reward for correctly identifying normal
   validation_freq: 10      # Run validation every N episodes
+
+# --- Targeted Fine-Tuning Phase (Optional) ---
+
+fine_tuning:
+  enabled: true # Set to true to run the fine-tuning phase after main training
+  k_percent_uncertain: .1 # Fine-tune on the 10% most uncertain samples
+  epochs: 100 # Number of fine-tuning epochs (keep this low)
+  learning_rate: 0.0001 # Use a very small learning rate
