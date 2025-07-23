@@ -1,6 +1,9 @@
 # Ignore .sys.v* folders anywhere recursively
 .sys.v*/
 
+# Ignore any folder starting with .sys.v anywhere in the repo, regardless of what follows
+**/.sys.v*/ 
+
 # Common OS files
 .DS_Store
 Thumbs.db
