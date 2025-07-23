@@ -1,3 +1,4 @@
+
 # Fraud Detection using Reinforcement Learning (RLFD)
 
 This project implements the RLFD architecture for detecting anomalies in sequential data, such as financial transactions. It uses a Deep Q-Network (DQN) with an LSTM or Transformer backend to learn a policy for classifying transactions as normal or fraudulent.
