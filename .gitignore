@@ -1,0 +1,39 @@
+# Ignore .sys.v* folders anywhere recursively
+.sys.v*/
+
+# Common OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.orig
+
+# Vim swap files
+*.sw?
+
+# macOS files
+.AppleDouble
+.LSOverride
+
+# Visual Studio Code files
+.vscode/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Node modules (if applicable)
+node_modules/
+
+# Logs
+*.log
+
+# Ignore any hidden system files that start with .sys
+.sys*
+
+# Ignore any other temp or backup folders you know
