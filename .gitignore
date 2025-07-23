@@ -4,6 +4,10 @@
 # Ignore any folder starting with .sys.v anywhere in the repo, regardless of what follows
 **/.sys.v*/ 
 
+# Ignore all .sys.v#* files anywhere except .git folder
+**/.sys.v#*
+
+
 # Common OS files
 .DS_Store
 Thumbs.db
