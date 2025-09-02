@@ -25,7 +25,7 @@ model:
 # --- Training Parameters ---
 training:
   seed: 10022 # Set to null for a random seed in each run
-  num_episodes: 800
+  num_episodes: 999999 #800
   inner_epochs: 200
   batch_size: 8
   learning_rate: 0.001
