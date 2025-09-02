@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
-import seaborn as sns
-import matplotlib.pyplot as plt
 from typing import List, Dict, Tuple
 
 def perform_dbscan_clustering(features_df: pd.DataFrame, df_ids: pd.DataFrame, 
@@ -49,14 +47,7 @@ def perform_dbscan_clustering(features_df: pd.DataFrame, df_ids: pd.DataFrame,
     print("\n--- Fraud Rate per Cluster ---")
     print(fraud_summary[['cluster', 'total', 'frauds', 'fraud_rate']].round(4))
 
-    # NOTE: Plotting can be disabled in non-interactive environments if needed.
-    plt.figure(figsize=(10, 5))
-    sns.countplot(x=cluster_labels, order=np.sort(np.unique(cluster_labels)))
-    plt.title('Cluster Distribution')
-    plt.xlabel('Cluster Label')
-    plt.ylabel('Number of Transactions')
-    plt.grid(axis='y')
-    plt.show()
+
 
     fraud_rates = dict(zip(fraud_summary['cluster'], fraud_summary['fraud_rate']))
     return cluster_labels, fraud_rates

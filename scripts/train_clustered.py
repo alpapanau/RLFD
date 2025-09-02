@@ -96,7 +96,7 @@ def main():
         full_cluster_config = config.copy()
         full_cluster_config['training'] = cluster_train_config
         
-        trained_agent, best_model_state = train_agent(agent, device, train_data, val_data, full_cluster_config)
+        trained_agent, best_model_state = train_agent(agent, device, train_data, val_data, full_cluster_config['training'])
         
         # --- MODIFIED EVALUATION BLOCK ---
         test_data = {'windows': w_test, 'masks': m_test, 'labels': l_test}

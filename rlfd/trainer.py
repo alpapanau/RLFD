@@ -52,7 +52,7 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
         bt_to_indices[bt].append(i)
 
     # Use only clients with more than one transaction for episodic training
-    episodic_bts = [bt for bt, idxs in bt_to_indices.items() if len(idxs) > 1]
+    episodic_bts = [bt for bt, idxs in bt_to_indices.items() if len(idxs) > 1] 
     random.shuffle(episodic_bts)
     
     num_episodes = min(len(episodic_bts), config['num_episodes'])
