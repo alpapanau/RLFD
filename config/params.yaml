@@ -38,6 +38,20 @@ training:
   r2_positive_normal: 1.0  # Reward for correctly identifying normal
   validation_freq: 10      # Run validation every N episodes
 
+# --- Clustering Parameters ---
+clustering_training:
+  eps: 0.99
+  min_samples: 25
+  defragment_max_gap: 5
+  # List of features to use for the initial clustering.
+  # These should be raw feature names *before* one-hot encoding.
+  selected_features:
+    - 'bonifico.prodotto_importooperazione'
+    - 'distance_from_median'
+    - 'CountryCodeBIC_isIT'
+    - 'isWeekEnd'
+    - 'hour'
+
 # --- Targeted Fine-Tuning Phase (Optional) ---
 
 fine_tuning:

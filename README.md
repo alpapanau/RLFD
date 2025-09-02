@@ -50,23 +50,18 @@ The project features a two-stage workflow:
 5.  **Place your data:**
     Place your raw CSV files in a directory (e.g., `Bancari/Data/bonifico/`) and ensure the `data.path` key in `config/params.yaml` points to this directory.
 
-## How to Run the Workflow
+## How to Run the Workflows
 
-The project is designed as a two-step process.
+This project supports two distinct training methodologies.
 
-### Step 1: Main Model Training
+### Workflow 1: Standard End-to-End Training
 
-First, train the base model using the RL approach. This script will evaluate the model on a validation set during training and save the state of the best-performing model.
+This workflow trains a single, global agent on the entire dataset.
 
-1.  **Configure:** Open `config/params.yaml` and adjust the parameters under the `data`, `preprocessing`, `model`, and `training` sections. Ensure `data.model_save_path` is set to where you want the best model saved.
-2.  **Run Training:**
-    ```bash
-    python scripts/train.py
-    ```
-    This will create a model file (e.g., `models/best_model.pth`). Results from this run will be logged to the CSV file specified in the config, marked with `model_version: best_validation`.
-
-### Step 2: Targeted Fine-Tuning (Optional)
-
+**Run Training:**
+```bash
+python scripts/train.py
+```
 After a base model has been trained and saved, you can run this script to fine-tune it on the examples it found most difficult.
 
 1.  **Configure:** Open `config/params.yaml`.
@@ -86,3 +81,19 @@ After a base model has been trained and saved, you can run this script to fine-t
     - Log the results, marked with `model_version: fine_tuned`.
 
 By comparing the `best_validation` and `fine_tuned` results in your log file, you can directly measure the impact of the targeted fine-tuning process.
+
+### Workflow 2: Clustered Training
+
+This alternative workflow first clusters transactions into behavioral groups and then trains a specialized agent for each cluster. This can be effective if there are distinct, identifiable patterns of fraudulent and normal behavior.
+
+1.  **Configure:** Open `config/params.yaml` and adjust the parameters under the `clustering_training` section. You can select which features to use for clustering and tune the DBSCAN algorithm's hyperparameters (`eps`, `min_samples`).
+2.  **Run Clustered Training:**
+    ```bash
+    python scripts/train_clustered.py
+    ```
+    This script will:
+    - Cluster the entire dataset.
+    - For each cluster, initialize and train a dedicated RL agent.
+    - Evaluate each agent on its cluster's test data.
+    - Finally, aggregate the predictions from all cluster agents and compute a global performance score.
+    - The results are logged to the CSV file with `model_version: clustered_training`.
