@@ -31,7 +31,7 @@ def perform_dbscan_clustering(features_df: pd.DataFrame, df_ids: pd.DataFrame,
     data_for_clustering = features_df[available_features]
     data_scaled = StandardScaler().fit_transform(data_for_clustering)
 
-    dbscan = DBSCAN(eps=eps, min_samples=min_samples, n_jobs=-1)
+    dbscan = DBSCAN(eps=eps, min_samples=min_samples, n_jobs=1)
     cluster_labels = dbscan.fit_predict(data_scaled)
 
     # --- Analysis and Visualization ---

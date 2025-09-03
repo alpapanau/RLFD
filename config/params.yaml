@@ -2,7 +2,7 @@
 
 # --- Data and Preprocessing ---
 data:
-  path: "data/bonifico/" # UPDATE THIS PATH
+  path: "/eos/home-i01/a/alpapana/SWAN_projects/Bancari/Data/bonifico/" #"data/bonifico/" # UPDATE THIS PATH
   results_log_file: "results_log.csv"
   model_save_path: "models/best_model.pth" # Path to save the best performing model
   fine_tuned_model_save_path: "models/fine_tuned"
