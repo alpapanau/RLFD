@@ -63,7 +63,7 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
     
     target_agent = copy.deepcopy(agent).to(device)
     best_recall_1 = 0.0
-    best_model_state = copy.deepcopy(agent.state_dict())
+ 
 
     r1 = train_config['r1_positive_fraud']
     r2 = train_config['r2_positive_normal']
@@ -125,16 +125,13 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
             recall_0, recall_1, _ = _evaluate_on_validation(agent, device, val_windows, val_masks, val_labels)
             print(f"Ep {episode}/{num_episodes} | Val Recall(N/A): {recall_0:.3f}/{recall_1:.3f} | Epsilon: {epsilon:.3f}")
 
-            if recall_1 > best_recall_1 and recall_0 >= 0.90:
+            if recall_1 >= best_recall_1 and recall_0 >= 0.90:
                 best_recall_1 = recall_1
                 best_model_state = copy.deepcopy(agent.state_dict())
+                VEP = episode
                 print(f"  -> New best model saved! Best Recall_1: {best_recall_1:.3f}")
-            #else:
-                # Roll back to the best model so far
-                #if episode % (2*train_config['validation_freq']) == 0:
-                    #agent.load_state_dict(best_model_state)
-                    #print("  -> Reverted to best model state")
-            agent.train()
+
+            agent.train()          
 
     print("Training finished.")
     return agent, best_model_state
