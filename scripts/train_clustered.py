@@ -98,14 +98,13 @@ def main():
         
         trained_agent, best_model_state = train_agent(agent, device, train_data, val_data, full_cluster_config['training'])
         
-        # --- MODIFIED EVALUATION BLOCK ---
         test_data = {'windows': w_test, 'masks': m_test, 'labels': l_test}
         final_results, best_results = evaluate_model(trained_agent, device, test_data, best_model_state)
 
         # Unpack predictions from the final model state
         preds_final, _, _, _ = final_results
         
-        # Use the "trick": if best_results is None, fall back to final_results
+        # If best_results is None, fall back to final_results
         results_for_best = best_results if best_results is not None else final_results
         preds_best, _, _, _ = results_for_best
 
@@ -113,7 +112,6 @@ def main():
         all_true_labels.extend(l_test)
         all_predicted_labels_final.extend(preds_final)
         all_predicted_labels_best.extend(preds_best)
-        # --- END OF MODIFICATION ---
 
     # --- 6. Final Global Evaluation ---
     log_params = {**config['preprocessing'], **config['model'], **config['training'], **config['clustering_training']}

@@ -4,6 +4,7 @@ import math
 
 class DQNAgentLSTM(nn.Module):
     """DQN Agent with an LSTM backend."""
+    model_type = "lstm" 
     def __init__(self, input_size: int, hidden_size: int, num_actions: int):
         super(DQNAgentLSTM, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, batch_first=True)
@@ -48,6 +49,7 @@ class PositionalEncoding(nn.Module):
 
 class DQNAgentTransformer(nn.Module):
     """DQN Agent with a Transformer Encoder backend."""
+    model_type = "transformer" 
     def __init__(self, input_size: int, hidden_size: int, num_actions: int, n_heads: int, num_layers: int, dropout: float):
         super(DQNAgentTransformer, self).__init__()
         self.input_proj = nn.Linear(input_size, hidden_size)

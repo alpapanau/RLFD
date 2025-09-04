@@ -38,7 +38,13 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
         val_data (dict): Dictionary containing validation data.
         train_config (Dict[str, Any]): The 'training' section of the config dictionary.
     """
-    optimizer = optim.Adam(agent.parameters(), lr=train_config['learning_rate'])
+    if agent.model_type == "lstm":
+        optimizer = optim.Adam(agent.parameters(), lr=train_config['learning_rate_lstm'])
+    elif agent.model_type == "transformer":
+        optimizer = optim.Adam(agent.parameters(), lr=train_config['learning_rate_transformer'])
+    else:
+        raise ValueError(f"Unknown agent type: {agent.model_type}")
+
     criterion = nn.MSELoss()
     replay_buffer = deque(maxlen=train_config['replay_buffer_size'])
     
@@ -57,7 +63,7 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
     
     target_agent = copy.deepcopy(agent).to(device)
     best_recall_1 = 0.0
-    best_model_state = None
+    best_model_state = copy.deepcopy(agent.state_dict())
 
     r1 = train_config['r1_positive_fraud']
     r2 = train_config['r2_positive_normal']
@@ -71,7 +77,7 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
         
         epsilon = max(train_config['epsilon_min'], 1.0 - (episode / num_episodes))
 
-        for _ in range(train_config['inner_epochs']):
+        for ie in range(train_config['inner_epochs']):
             i = random.choice(indices)
             state = torch.tensor(train_windows[i], dtype=torch.float32).unsqueeze(0).to(device)
             length = torch.tensor([sum(train_masks[i])], dtype=torch.int64).to(device)
@@ -79,7 +85,7 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
             i_idx = indices.index(i)
             next_i = indices[i_idx + 1] if i_idx < len(indices) - 1 else i
             next_state = torch.tensor(train_windows[next_i], dtype=torch.float32).unsqueeze(0).to(device)
-
+            #epsilon = max(train_config['epsilon_min'], 1.0 - (ie / train_config['inner_epochs']))
             if random.random() < epsilon:
                 action = random.choice([0, 1])
             else:
@@ -123,7 +129,11 @@ def train_agent(agent: nn.Module, device: torch.device, train_data: dict, val_da
                 best_recall_1 = recall_1
                 best_model_state = copy.deepcopy(agent.state_dict())
                 print(f"  -> New best model saved! Best Recall_1: {best_recall_1:.3f}")
-            
+            #else:
+                # Roll back to the best model so far
+                #if episode % (2*train_config['validation_freq']) == 0:
+                    #agent.load_state_dict(best_model_state)
+                    #print("  -> Reverted to best model state")
             agent.train()
 
     print("Training finished.")
@@ -160,10 +170,8 @@ def evaluate_model(agent: nn.Module, device: torch.device, test_data: dict, best
         best_agent = copy.deepcopy(agent)
         best_agent.load_state_dict(best_model_state)
         
-        # --- AND FIX IT HERE TOO ---
         best_results = _evaluate(best_agent)
-        # --- END OF FIX ---
-        
+
         preds_best, acc_best, report_best, cm_best = best_results # Unpack for printing
         print(f"Accuracy: {acc_best:.4f}\nClassification Report:\n{report_best}\nConfusion Matrix:\n{cm_best}")
 
